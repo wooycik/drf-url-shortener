@@ -1,0 +1,6 @@
+Django==5.2.3
+djangorestframework==3.16.0
+black==23.9.1
+ruff==0.6.0
+pytest==8.3.2
+pytest-django==4.5.2
