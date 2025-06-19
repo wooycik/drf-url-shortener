@@ -16,6 +16,11 @@ docker run -p 8000:8000 drf-url-shortener
 
 The app will be available at http://localhost:8000.
 
+### Generate migrations
+```sh
+docker run --rm drf-url-shortener python manage.py makemigrations
+```
+
 ### Running migrations
 ```sh
 docker run --rm drf-url-shortener python manage.py migrate
