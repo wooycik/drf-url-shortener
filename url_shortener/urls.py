@@ -16,8 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from url_shortener.shortener.views import ShortenerViewSet
 
 urlpatterns = [
     path("api/v1/shorten/", include("url_shortener.shortener.urls")),
+    path(
+        "<str:shortened_url>/",
+        ShortenerViewSet.as_view(),
+        name="retrieve_shortened_url",
+    ),
     path("admin/", admin.site.urls),
 ]

@@ -14,6 +14,7 @@ class ShortenerViewSet(generics.CreateAPIView, generics.RetrieveAPIView):
     serializer_class = ShortenedURLSerializer
     authentication_classes = []
     permission_classes = []
+    lookup_field = "shortened_url"
 
     def create(self, request, *args, **kwargs):
         # Check for existing URL first, before validation
