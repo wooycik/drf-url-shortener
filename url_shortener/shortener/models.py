@@ -1,3 +1,5 @@
+import random
+
 from django.db import models
 
 
@@ -18,11 +20,23 @@ class ShortenedURL(models.Model):
     def __str__(self):
         return f"{self.original_url} -> {self.shortened_url}"
 
-    def create_shortened_url(self, original_url):
+    @staticmethod
+    def _generate_shortened_url():
         """
-        Method to generate a shortened URL.
+        Generate a random shortened URL.
+        """
+        characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        shortened_url = "".join(random.choice(characters) for _ in range(10))
+        return shortened_url
 
-        Args:
-            original_url (str): The original URL to shorten.
+    def save(self, *args, **kwargs):
         """
-        pass
+        Override save method to generate a unique shortened URL.
+        """
+        if not self.shortened_url:
+            self.shortened_url = self._generate_shortened_url()
+            while ShortenedURL.objects.filter(
+                shortened_url=self.shortened_url
+            ).exists():
+                self.shortened_url = self._generate_shortened_url()
+        super().save(*args, **kwargs)
