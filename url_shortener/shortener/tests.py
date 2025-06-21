@@ -55,3 +55,35 @@ class TestShortenerViewSet:
         )
         assert response.status_code == status.HTTP_201_CREATED
         assert "shortened_url" in response.data
+
+    def test_retrieve_shortened_url(self, api_client):
+        """Test retrieving a shortened URL."""
+        original_url = "http://example.com"
+        shortened_url_instance = ShortenedURL.objects.create(original_url=original_url)
+        response = api_client.get(
+            reverse(
+                "retrieve_shortened_url",
+                kwargs={"shortened_url": shortened_url_instance.shortened_url},
+            )
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["original_url"] == original_url
+
+    def test_retrieve_nonexistent_shortened_url(self, api_client):
+        """Test retrieving a nonexistent shortened URL."""
+        response = api_client.get(
+            reverse("retrieve_shortened_url", kwargs={"shortened_url": "nonexistent"})
+        )
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_retrieve_shortened_url_with_invalid_method(self, api_client):
+        """Test retrieving a shortened URL with an invalid method."""
+        original_url = "http://example.com"
+        shortened_url_instance = ShortenedURL.objects.create(original_url=original_url)
+        response = api_client.post(
+            reverse(
+                "retrieve_shortened_url",
+                kwargs={"shortened_url": shortened_url_instance.shortened_url},
+            )
+        )
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
