@@ -17,6 +17,11 @@ class ShortenerViewSet(generics.CreateAPIView, generics.RetrieveAPIView):
     lookup_field = "shortened_url"
 
     def create(self, request, *args, **kwargs):
+        if "shortened_url" in kwargs:
+            return Response(
+                {"detail": "Method 'POST' not allowed for this endpoint."},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
         # Check for existing URL first, before validation
         original_url = request.data.get("original_url")
         if original_url:
@@ -31,3 +36,8 @@ class ShortenerViewSet(generics.CreateAPIView, generics.RetrieveAPIView):
 
         # Proceed with normal creation if no existing URL found
         return super().create(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if "shortened_url" in kwargs:
+            return super().retrieve(request, *args, **kwargs)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
