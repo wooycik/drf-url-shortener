@@ -12,7 +12,7 @@ class ShortenedURLSerializer(serializers.ModelSerializer):
         fields = ["original_url", "shortened_url"]
         read_only_fields = ["shortened_url"]
 
-    def validate_original_url(self, value):
+    def validate_original_url(self, value: str) -> str:
         """
         Validate that the original URL is a valid URL.
         """
@@ -22,7 +22,7 @@ class ShortenedURLSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def get_shortened_url(self, obj):
+    def get_shortened_url(self, obj: ShortenedURL) -> str:
         """
         Return the shortened URL.
         """
