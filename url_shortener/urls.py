@@ -16,14 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from url_shortener.shortener.views import ShortenerViewSet
+from url_shortener.shortener.views import ShortenedURLRetrieveViewSet
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 urlpatterns = [
     path("api/v1/shorten/", include("url_shortener.shortener.urls")),
+    path("admin/", admin.site.urls),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path(
         "<str:shortened_url>/",
-        ShortenerViewSet.as_view(),
+        ShortenedURLRetrieveViewSet.as_view(),
         name="retrieve_shortened_url",
     ),
-    path("admin/", admin.site.urls),
 ]
